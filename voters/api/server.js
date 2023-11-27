@@ -26,7 +26,7 @@ client.connect()
   })
   .catch(err => {
     console.error('Failed to connect to MongoDB', err);
-  });
+  }); 
 
 const db = client.db("voting");
 
