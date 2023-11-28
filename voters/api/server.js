@@ -35,7 +35,6 @@ app.use(express.json());
 app.get('/candidates',  async (req, res) => {
     try{
         const candidates = await db.collection("candidates").find().toArray();
-        console.log(candidates);
         res.end(JSON.stringify(candidates));
     } catch (error) {
         res.status(500).json({success: false, error:'Internal server error'});
@@ -104,22 +103,28 @@ app.get('/voter', async (req, res) => {
   // POST a new voter
   app.post('/voter', async (req, res) => {
     try {
-      const newVoter = req.body;
-      const result = await db.collection('voters').insertOne(newVoter);
-      res.json(result.ops[0]);
+      console.log(req.body.name);
+      const newVoterName = req.body.name;
+      const result = await db.collection('voters').insertOne({name: newVoterName, ballot: {candidate: null}});
+      res.json(result);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Internal server error' });
     }
-  });
-  
+});
+
   // PUT (update) a specific voter by id
-  app.put('/voter/:id', async (req, res) => {
+  app.put('/voter/:id/ballot', async (req, res) => {
     try {
-      const updatedVoter = req.body;
-      const result = await db.collection('voters').updateOne({ _id: mongodb.ObjectId(req.params.id) }, { $set: updatedVoter });
+      const voterId = req.params.id;
+      const candidateId = req.body.candidate;
+      const candidate = await db.collection('candidates').findOne({ _id: new mongodb.ObjectId(candidateId) });
+      const result = await db.collection('voters').updateOne(
+        { _id: new mongodb.ObjectId(voterId) },
+        { $set: { "ballot.candidate": candidate.name } }
+      );
       if (result.modifiedCount === 1) {
-        res.json(updatedVoter);
+        res.json({ candidate: candidate.name });
       } else {
         res.status(404).json({ error: 'Voter not found' });
       }
@@ -129,14 +134,16 @@ app.get('/voter', async (req, res) => {
     }
   });
   
+  
+  
   // DELETE a specific voter by id
   app.delete('/voter/:id', async (req, res) => {
     try {
-      const result = await db.collection('voters').deleteOne({ _id: mongodb.ObjectId(req.params.id) });
+      const result = await db.collection('voters').deleteOne({ _id: new mongodb.ObjectId(req.params.id) });
       if (result.deletedCount === 1) {
-        res.json({ message: 'Voter deleted successfully' });
+        res.json({ message: "Voter deleted successfully" });
       } else {
-        res.status(404).json({ error: 'Voter not found' });
+        res.status(404).json({ error: "Voter not found" });
       }
     } catch (error) {
       console.error(error);
@@ -159,19 +166,4 @@ app.get('/voter', async (req, res) => {
     }
   });
   
-  // PUT (update) a specific voter's ballot by voter id
-  app.put('/voter/:id/ballot', async (req, res) => {
-    try {
-      const updatedBallot = req.body;
-      const result = await db.collection('voters').updateOne({ _id: mongodb.ObjectId(req.params.id) }, { $set: { ballot: updatedBallot } });
-      if (result.modifiedCount === 1) {
-        res.json(updatedBallot);
-      } else {
-        res.status(404).json({ error: 'Voter not found' });
-      }
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  });
   
