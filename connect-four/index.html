@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>Connect Four</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .cell {
+            width: 70px;
+            height: 70px;
+            border: 1px solid black;
+            background-color: white;
+            border-radius: 100px;
+            cursor: pointer;
+        }
+    
+        .row {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr); /* 7 columns */
+            padding-bottom: 2rem;
+        }
+    
+        .blue.cell {
+            background-color: blue;
+        }
+    
+        .red.cell {
+            background-color: red;
+        }
+    </style>
+</head>
+<body class="mx-auto h-screen w-screen flex justify-center">
+    <section id="gameDisplay" class="h-[85%] w-[70%] items-center justify-center pt-[5rem]">
+        <h1>Connect Four - UVA CS4260 </h1>
+        <div id="game" class="grid grid-cols-[20%_80%] gap-x-2 pt-[2rem]">
+            <div id="gameStatus" class="bg-red-100 grid grid-cols-1 rounded-md p-2 h-fit">
+                <p class="text-sm font-bold my-2">Game Status</p>
+                <p id="playerStatus" class="text-sm font-medium">Current Turn: Player 1</p>
+            </div>
+            <div id="gameBoard" class="bg-yellow-100 grid grid-cols-1 rounded-md p-4">
+                <p class="text-sm font-bold my-2">Board</p>
+                <div id="boardContainer" class="pt-5"></div>
+            </div>
+        </div>
+        <div class="w-full p-5 ml-10">
+            <div id="controlPanel" class="grid grid-cols-7 rounded-md w-[100%] items-center justify-center mx-auto">
+                <button class="bg-blue-300 rounded-md p-3 m-3" onclick="dropToken(0)">Column 1</button>
+                <button class="bg-blue-300 rounded-md p-3 m-3" onclick="dropToken(1)">Column 2</button>
+                <button class="bg-blue-300 rounded-md p-3 m-3" onclick="dropToken(2)">Column 3</button>
+                <button class="bg-blue-300 rounded-md p-3 m-3" onclick="dropToken(3)">Column 4</button>
+                <button class="bg-blue-300 rounded-md p-3 m-3" onclick="dropToken(4)">Column 5</button>
+                <button class="bg-blue-300 rounded-md p-3 m-3" onclick="dropToken(5)">Column 6</button>
+                <button class="bg-blue-300 rounded-md p-3 m-3" onclick="dropToken(6)">Column 7</button>
+            </div>
+        </div>
+    </section>
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+#Name: Manish Balamurugan (mb2mcc)
+#Partner Name: Yonatan Yohannes (yy5md)
+
+#Connect Four Pseudocode
+
+board[][] #board intialization | rows = 4, cols = 7, values=0
+
+#Insert token function. 
+#Parameters: col => column, pid => player
+function insert_token(c, pid):
+    status = false
+    row = 0 #start row
+    while(!status and rr < 4):
+        if board[r][c] == 0: #0 => default init cell value 
+            board[r][c] = pid
+            placed = true
+        r++ #increment row value if curr_cell is claimed
+    if check_board(r, c, pid):
+        return (true, pid)
+    else:
+        return (false, pid)
+
+#Board winner check function
+#Parameters: row => cell row; col => cell col; player => pid
+
+matches = 0
+function check_board(row, col, pid):
+    # Base case: Out of bounds or not the player's token
+    if row < 0 or row >= 4 or col < 0 or col >= 7 or board[row][col] != pid:
+        return false
+
+    # Check horizontal, vertical, and diagonal directions
+    if check_direction(row, col, pid, 0, 1) or # Horizontal
+       check_direction(row, col, pid, 1, 0) or # Vertical
+       check_direction(row, col, pid, 1, 1) or # Diagonal (bottom-left to top-right)
+       check_direction(row, col, pid, 1, -1):  # Diagonal (bottom-right to top-left)
+        return true
+
+    return false
+
+# Function to check a specific direction for four tokens in a row
+function check_direction(row, col, pid, dr, dc):
+    if matches == 4:
+        return true
+
+    if row < 0 or row >= 4 or col < 0 or col >= 7 or board[row][col] != pid:
+        return false
+    matches++
+    return check_direction(row + dr, col + dc, pid, dr, dc)
+        
